@@ -10,15 +10,15 @@ class CountdownTimer {
   }
 
   countDown() {
-    const SEC = 1000 * 60;
-    const HOUR = SEC * 60;
+    const MSEC = 1000 * 60;
+    const HOUR = MSEC * 60;
     const DAY = HOUR * 24;
 
     const deltaTime = this.targetDate - Date.now();
     const days = this.padInt(Math.floor(deltaTime / DAY));
     const hours = this.padInt(Math.floor((deltaTime % DAY) / HOUR));
-    const mins = this.padInt(Math.floor((deltaTime % HOUR) / SEC));
-    const secs = this.padInt(Math.floor((deltaTime % SEC) / 1000));
+    const mins = this.padInt(Math.floor((deltaTime % HOUR) / MSEC));
+    const secs = this.padInt(Math.floor((deltaTime % MSEC) / 1000));
     this.updateData({ days, hours, mins, secs });
   }
 
