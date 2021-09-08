@@ -1,8 +1,6 @@
 class CountdownTimer {
-  constructor({ updateData, targetDate }) {
-    this.targetDate = targetDate.getTime();
-    this.updateData = updateData;
-    this.countDown();
+  constructor(targetDate) {
+    this.targetDate = targetDate;
   }
 
   start() {
@@ -19,7 +17,8 @@ class CountdownTimer {
     const hours = this.padInt(Math.floor((deltaTime % DAY) / HOUR));
     const mins = this.padInt(Math.floor((deltaTime % HOUR) / MSEC));
     const secs = this.padInt(Math.floor((deltaTime % MSEC) / 1000));
-    this.updateData({ days, hours, mins, secs });
+
+    return { days, hours, mins, secs };
   }
 
   padInt(value) {
@@ -27,27 +26,36 @@ class CountdownTimer {
   }
 }
 
-const timerRef = document.querySelector("#timer-1");
-const daysRef = timerRef.querySelector('[data-value="days"');
-const hoursRef = timerRef.querySelector('[data-value="hours"');
-const minsRef = timerRef.querySelector('[data-value="mins"');
-const secsRef = timerRef.querySelector('[data-value="secs"');
+class CountdownTimerData extends CountdownTimer {
+  constructor({ targetDate, timerSel }) {
+    super(targetDate);
+    this.timerRef = document.querySelector(timerSel);
+    this.daysRef = this.timerRef.querySelector('[data-value="days"');
+    this.hoursRef = this.timerRef.querySelector('[data-value="hours"');
+    this.minsRef = this.timerRef.querySelector('[data-value="mins"');
+    this.secsRef = this.timerRef.querySelector('[data-value="secs"');
+    this.setStyle();
+    this.countDown();
+  }
 
-timerRef.style.display = "flex";
-timerRef.style.flexWrap = "wrap";
-timerRef.style.justifyContent = "space-evenly";
-timerRef.style.fontSize = "30px";
+  setStyle() {
+    this.timerRef.style.display = "flex";
+    this.timerRef.style.flexWrap = "wrap";
+    this.timerRef.style.justifyContent = "space-evenly";
+    this.timerRef.style.fontSize = "30px";
+  }
 
-const timer = new CountdownTimer({
-  updateData: updateData,
-  targetDate: new Date("Dec 20, 2021"),
-});
-
-timer.start();
-
-function updateData({ days, hours, mins, secs }) {
-  daysRef.textContent = days;
-  hoursRef.textContent = hours;
-  minsRef.textContent = mins;
-  secsRef.textContent = secs;
+  countDown() {
+    const { days, hours, mins, secs } = super.countDown();
+    this.daysRef.textContent = days;
+    this.hoursRef.textContent = hours;
+    this.minsRef.textContent = mins;
+    this.secsRef.textContent = secs;
+  }
 }
+
+const timer = new CountdownTimerData({
+  targetDate: new Date("Dec 20, 2021").getTime(),
+  timerSel: "#timer-1",
+});
+timer.start();
